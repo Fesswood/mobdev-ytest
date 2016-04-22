@@ -1,9 +1,8 @@
 package com.github.fesswood.yandextestapp.presentation.inject;
 
-import com.github.fesswood.yandextestapp.presentation.musicGroupList.GroupListFragment;
-
 import javax.inject.Singleton;
 
+import com.github.fesswood.yandextestapp.presentation.main.musicGroupList.GroupListFragment;
 import dagger.Component;
 
 /**
