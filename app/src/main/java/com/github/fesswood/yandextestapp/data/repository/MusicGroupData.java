@@ -7,34 +7,23 @@ import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by fesswood on 24.04.16.
  */
 public class MusicGroupData extends RealmObject{
 
-    @SerializedName("id")
+    @Index
+    @PrimaryKey
     private Integer id;
-    @SerializedName("name")
-    
     private String name;
-    @SerializedName("genres")
-    
     private RealmList<GenreData> genres = new RealmList<GenreData>();
-    @SerializedName("tracks")
-    
     private Integer tracks;
-    @SerializedName("albums")
-    
     private Integer albums;
-    @SerializedName("link")
-    
     private String link;
-    @SerializedName("description")
-    
     private String description;
-    @SerializedName("cover")
-    
     private CoverData cover;
 
     /**

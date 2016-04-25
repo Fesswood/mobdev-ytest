@@ -19,7 +19,6 @@ public class DataModule {
 
     @Singleton
     @Provides
-    @Named(REPOSITORY)
     public ClosableGroupDataRepository provideMusicGroupDataProvider() {
         return new MusicGroupDataRepositoryImpl();
     }

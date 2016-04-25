@@ -10,6 +10,7 @@ import com.github.fesswood.yandextestapp.presentation.inject.DomainModule;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
@@ -27,9 +28,9 @@ public class MusicGroupInteractor extends Interactor<List<MusicGroup>> {
     private final RestApi mRestApi;
     private final ClosableGroupDataRepository mGroupDataRepository;
 
+    @Inject
     public MusicGroupInteractor(@Named(DomainModule.JOB) Scheduler jobScheduler,
                                 @Named(DomainModule.UI) Scheduler uiScheduler,
-                                @Named(DataModule.REPOSITORY)
                                 ClosableGroupDataRepository repository) {
         super(jobScheduler, uiScheduler);
         mRestApi = new RestApiImpl();
@@ -38,8 +39,9 @@ public class MusicGroupInteractor extends Interactor<List<MusicGroup>> {
 
     @Override
     public void executeRequest(Subscriber<List<MusicGroup>> subscriber) {
+        mGroupDataRepository.open();
         Log.d(TAG, "executeRequest: Is db has music groups?");
-        if(mGroupDataRepository.isEmpty()){
+        if (mGroupDataRepository.isEmpty()) {
             Log.d(TAG, "executeRequest: No. sends request...");
             super.executeRequest(new Subscriber<List<MusicGroup>>() {
                 @Override
@@ -49,35 +51,22 @@ public class MusicGroupInteractor extends Interactor<List<MusicGroup>> {
 
                 @Override
                 public void onError(Throwable e) {
+                    Log.e(TAG, "onError: ", e);
                     subscriber.onError(e);
                 }
 
                 @Override
                 public void onNext(List<MusicGroup> musicGroupRest) {
                     mGroupDataRepository.saveAllMusicGroup(musicGroupRest);
-                    mGroupDataRepository.getAllMusicGroup(jobScheduler).subscribe(subscriber);
+                    execute(mGroupDataRepository.getAllMusicGroup(jobScheduler), subscriber);
                 }
             });
-        }else {
+        } else {
             Log.d(TAG, "executeRequest: Yes. getting from db...");
             mGroupDataRepository.getAllMusicGroup(jobScheduler).subscribe(subscriber);
         }
     }
 
-    @Override
-    public void executeRequest(Action1<List<MusicGroup>> subscriber) {
-        Log.d(TAG, "executeRequest: Is db has music groups?");
-        if(mGroupDataRepository.isEmpty()){
-            Log.d(TAG, "executeRequest: No. sends request...");
-            super.executeRequest(musicGroupRest -> {
-                mGroupDataRepository.saveAllMusicGroup(musicGroupRest);
-                mGroupDataRepository.getAllMusicGroup(jobScheduler).subscribe(subscriber);
-            });
-        }else {
-            Log.d(TAG, "executeRequest: Yes. getting from db...");
-            mGroupDataRepository.getAllMusicGroup(jobScheduler).subscribe(subscriber);
-        }
-    }
 
     @Override
     protected Observable<List<MusicGroup>> prepareRequest() {

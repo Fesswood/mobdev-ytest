@@ -5,7 +5,7 @@ package com.github.fesswood.yandextestapp.data.api;
  */
 public class RestConst {
 
-    final static String API_ENDPOINT = "download.cdn.yandex.net/mobilization-2016/";
+    final static String API_ENDPOINT = "http://download.cdn.yandex.net/mobilization-2016/";
 
     public static class api {
         final static String GET_ARTISTS = "artists.json";

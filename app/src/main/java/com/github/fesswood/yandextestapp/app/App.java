@@ -31,9 +31,11 @@ public class App extends Application {
         builder.rxFactory(new RealmObservableFactory());
         RealmConfiguration defaultConfiguration = builder.build();
         Realm.setDefaultConfiguration(defaultConfiguration);
+        Realm.deleteRealm(defaultConfiguration);
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
+
         } catch (IllegalArgumentException exception) {
             Log.e(TAG, "Can't migrate realm, deleting realm base....  Cause: ", exception);
             Realm.deleteRealm(defaultConfiguration);

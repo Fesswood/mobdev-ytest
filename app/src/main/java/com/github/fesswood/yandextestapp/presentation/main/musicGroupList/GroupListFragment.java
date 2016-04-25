@@ -6,12 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.github.fesswood.yandextestapp.R;
-import com.github.fesswood.yandextestapp.domain.musicGroup.MusicGroup;
 import com.github.fesswood.yandextestapp.presentation.common.BaseFragment;
 import com.github.fesswood.yandextestapp.presentation.common.BasePresenter;
 import com.github.fesswood.yandextestapp.presentation.common.Layout;
@@ -22,6 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link GroupListFragment#newInstance} factory method to
@@ -31,8 +32,14 @@ import javax.inject.Inject;
 public class GroupListFragment extends BaseFragment implements GroupListView{
 
 
+    private static final String TAG = GroupListFragment.class.getCanonicalName();
     @Inject
     protected GroupListPresenter mGroupListPresenter;
+    @Bind(R.id.rvMusicGroups)
+    RecyclerView rvMusicGroups;
+
+    private MusicGroupAdapter mMusicGroupAdapter;
+    private String title = null;
 
     public static GroupListFragment newInstance() {
         return new GroupListFragment();
@@ -54,17 +61,10 @@ public class GroupListFragment extends BaseFragment implements GroupListView{
         getPresenter().setRouter(null);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group_list, container, false);
-    }
-
     @NonNull
     @Override
     protected BasePresenter getPresenter() {
-        return null;
+        return mGroupListPresenter;
     }
 
     @Override
@@ -78,8 +78,14 @@ public class GroupListFragment extends BaseFragment implements GroupListView{
     }
 
     @Override
-    public void fillAdapter(List<MusicGroup> musicGroups) {
-
+    public void fillAdapter(List<MusicGroupViewModel> musicGroups) {
+        Log.d(TAG, "fillAdapter: check data:");
+        for (MusicGroupViewModel group : musicGroups) {
+            Log.d(TAG, "fillAdapter: " +group);
+        }
+        mMusicGroupAdapter = new MusicGroupAdapter(musicGroups);
+        rvMusicGroups.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvMusicGroups.setAdapter(mMusicGroupAdapter);
     }
 
     @Override

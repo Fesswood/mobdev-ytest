@@ -12,5 +12,5 @@ import dagger.Component;
 @Component(modules = {DomainModule.class, DataModule.class})
 public interface MainActivityComponent {
 
-    void inject(GroupListFragment contactsFragment);
+    void inject(GroupListFragment groupListFragment);
 }

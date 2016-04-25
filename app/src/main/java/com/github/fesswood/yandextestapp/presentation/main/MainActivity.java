@@ -7,6 +7,7 @@ import com.github.fesswood.yandextestapp.R;
 import com.github.fesswood.yandextestapp.presentation.common.BaseActivity;
 import com.github.fesswood.yandextestapp.presentation.common.Layout;
 import com.github.fesswood.yandextestapp.presentation.detail.DetailActivity;
+import com.github.fesswood.yandextestapp.presentation.inject.DaggerMainActivityComponent;
 import com.github.fesswood.yandextestapp.presentation.inject.DataModule;
 import com.github.fesswood.yandextestapp.presentation.inject.DomainModule;
 import com.github.fesswood.yandextestapp.presentation.inject.MainActivityComponent;

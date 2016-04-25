@@ -26,8 +26,8 @@ public abstract class Interactor<ResultType> {
                 .subscribe(subscriber));
     }
 
-    public void executeRequest(Action1<ResultType> subscriber) {
-        subscription.add(prepareRequest()
+    public void execute(Observable<ResultType> observable, Subscriber<ResultType> subscriber) {
+        subscription.add(observable
                 .subscribeOn(jobScheduler)
                 .observeOn(uiScheduler)
                 .subscribe(subscriber));

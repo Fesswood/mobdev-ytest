@@ -1,6 +1,7 @@
 package com.github.fesswood.yandextestapp.data.repository;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.github.fesswood.yandextestapp.domain.musicGroup.Cover;
 import com.github.fesswood.yandextestapp.domain.musicGroup.MusicGroup;
@@ -20,7 +21,8 @@ import rx.Scheduler;
 public class MusicGroupDataRepositoryImpl implements ClosableGroupDataRepository {
 
 
-    private final Realm mRealm;
+    private static final String TAG = MusicGroupDataRepositoryImpl.class.getSimpleName();
+    private Realm mRealm;
 
     public MusicGroupDataRepositoryImpl() {
         mRealm = Realm.getDefaultInstance();
@@ -28,9 +30,9 @@ public class MusicGroupDataRepositoryImpl implements ClosableGroupDataRepository
 
     @Override
     public Observable<List<MusicGroup>> getAllMusicGroup(Scheduler scheduler) {
-        return mRealm.where(MusicGroupData.class)
-                .findAll()
-                .asObservable()
+        List<MusicGroupData> musicGroupDatas = mRealm.copyFromRealm(mRealm
+                .where(MusicGroupData.class).findAll());
+      return   Observable.just(musicGroupDatas)
                 .flatMap(Observable::from)
                 .map(MusicGroupDataRepositoryImpl.this::createMusicGroup)
                 .toList().asObservable();
@@ -42,12 +44,12 @@ public class MusicGroupDataRepositoryImpl implements ClosableGroupDataRepository
                 .flatMap(Observable::from)
                 .map(MusicGroupDataRepositoryImpl.this::createMusicGroupData)
                 .toList()
-                .subscribe(realm::copyToRealm));
+                .subscribe(realm::copyToRealmOrUpdate));
     }
 
     @Override
     public boolean isEmpty() {
-       return mRealm.where(MusicGroupData.class).count() == 0;
+        return mRealm.where(MusicGroupData.class).count() == 0;
     }
 
     private MusicGroup createMusicGroup(MusicGroupData x) {
@@ -77,7 +79,6 @@ public class MusicGroupDataRepositoryImpl implements ClosableGroupDataRepository
     private Cover createCover(CoverData cover) {
         return new Cover(cover.getBig(), cover.getSmall());
     }
-
 
 
     private MusicGroupData createMusicGroupData(MusicGroup x) {
@@ -112,6 +113,14 @@ public class MusicGroupDataRepositoryImpl implements ClosableGroupDataRepository
         coverData.setBig(cover.getBig());
         coverData.setSmall(cover.getSmall());
         return coverData;
+    }
+
+    @Override
+    public void open() {
+        if (mRealm == null || mRealm.isClosed()) {
+            Log.d(TAG, "open: restore realm instance");
+            mRealm = Realm.getDefaultInstance();
+        }
     }
 
     @Override

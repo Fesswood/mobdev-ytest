@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface GroupListView extends BaseView {
 
-     void fillAdapter(List<MusicGroup> musicGroups) ;
+     void fillAdapter(List<MusicGroupViewModel> musicGroups) ;
 }

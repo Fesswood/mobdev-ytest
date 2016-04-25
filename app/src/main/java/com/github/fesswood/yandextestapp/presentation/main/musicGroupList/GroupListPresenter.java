@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.functions.Action1;
 
 /**
  * Created by fesswood on 20.04.16.
@@ -48,8 +49,19 @@ public class GroupListPresenter extends BasePresenter<GroupListView, MainRouter>
 
             @Override
             public void onNext(List<MusicGroup> musicGroups) {
-                Observable.just(musicGroups).flatMap(Observable::from).map(MusicGroupViewModel::new);
-                    getView().fillAdapter(musicGroups);
+                Log.d(TAG, "onNext: check data:");
+                for (MusicGroup group : musicGroups) {
+                    Log.d(TAG, "MusicGroup: " +group);
+                }
+                Observable
+                        .just(musicGroups)
+                        .flatMap(Observable::from)
+                        .map(MusicGroupViewModel::new)
+                        .toList()
+                        .subscribe(musicGroupViewModelList -> {
+                            getView().fillAdapter(musicGroupViewModelList);
+                        });
+
             }
         });
     }

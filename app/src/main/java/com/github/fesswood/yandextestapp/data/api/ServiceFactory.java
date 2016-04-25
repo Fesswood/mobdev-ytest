@@ -17,6 +17,7 @@ public class ServiceFactory {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(endPoint)
+                .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();

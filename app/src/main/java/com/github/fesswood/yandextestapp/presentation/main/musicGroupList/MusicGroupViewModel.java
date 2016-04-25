@@ -1,8 +1,6 @@
 package com.github.fesswood.yandextestapp.presentation.main.musicGroupList;
 
-import com.github.fesswood.yandextestapp.domain.musicGroup.Cover;
 import com.github.fesswood.yandextestapp.domain.musicGroup.MusicGroup;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +15,7 @@ public class MusicGroupViewModel {
     private List<String> genres = new ArrayList<String>();
     private Integer tracks;
     private Integer albums;
-    private String coverSmalUrl;
+    private String coverSmallUrl;
 
     public MusicGroupViewModel(MusicGroup x) {
         id = x.getId();
@@ -25,7 +23,7 @@ public class MusicGroupViewModel {
         genres = x.getGenres();
         tracks = x.getTracks();
         albums = x.getAlbums();
-        coverSmalUrl = x.getCover().getSmall();
+        coverSmallUrl = x.getCover().getSmall();
 
     }
 
@@ -70,11 +68,23 @@ public class MusicGroupViewModel {
         this.albums = albums;
     }
 
-    public String getCoverSmalUrl() {
-        return coverSmalUrl;
+    public String getCoverSmallUrl() {
+        return coverSmallUrl;
     }
 
-    public void setCoverSmalUrl(String coverSmalUrl) {
-        this.coverSmalUrl = coverSmalUrl;
+    public void setCoverSmallUrl(String coverSmallUrl) {
+        this.coverSmallUrl = coverSmallUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "MusicGroupViewModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", genres=" + genres +
+                ", tracks=" + tracks +
+                ", albums=" + albums +
+                ", coverSmallUrl='" + coverSmallUrl + '\'' +
+                '}';
     }
 }

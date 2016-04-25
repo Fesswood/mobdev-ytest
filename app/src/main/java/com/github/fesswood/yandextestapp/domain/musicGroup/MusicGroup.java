@@ -177,4 +177,18 @@ public class MusicGroup  {
     public void setCover(Cover cover) {
         this.cover = cover;
     }
+
+    @Override
+    public String toString() {
+        return "MusicGroup{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", genres=" + genres +
+                ", tracks=" + tracks +
+                ", albums=" + albums +
+                ", link='" + link + '\'' +
+                ", description='" + description + '\'' +
+                ", cover=" + cover +
+                '}';
+    }
 }

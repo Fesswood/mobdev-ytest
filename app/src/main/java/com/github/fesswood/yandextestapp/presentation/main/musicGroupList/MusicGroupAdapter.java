@@ -1,7 +1,10 @@
 package com.github.fesswood.yandextestapp.presentation.main.musicGroupList;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +14,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.fesswood.yandextestapp.R;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -63,10 +65,17 @@ public class MusicGroupAdapter extends
         }
 
         public void bind(MusicGroupViewModel group) {
-            mDvCover.setImageURI(Uri.parse(group.getCoverSmalUrl()));
+            mDvCover.setImageURI(Uri.parse(group.getCoverSmallUrl()));
             mTvTitle.setText(group.getName());
-            mTvGenres.setText(Arrays.toString(group.getGenres().toArray()));
-            mTvDescription.setText(group.getName());
+            mTvGenres.setText(TextUtils.join(",", group.getGenres()));
+            mTvDescription.setText(formatMusicGroupInfo(group));
+        }
+
+        @NonNull
+        private String formatMusicGroupInfo(MusicGroupViewModel group) {
+            return itemView.getContext().getString(R.string.small_description,
+                    group.getAlbums(),
+                    group.getTracks());
         }
     }
 }
