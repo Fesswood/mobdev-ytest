@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity implements MainRouter {
     }
 
     @Override
-    public void openDetail() {
+    public void openDetail(int id) {
         Intent intent = new Intent(this, DetailActivity.class);
         startActivity(intent);
     }

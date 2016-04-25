@@ -3,17 +3,22 @@ package com.github.fesswood.yandextestapp.presentation.main.musicGroupList;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.fesswood.yandextestapp.R;
+import com.github.fesswood.yandextestapp.domain.musicGroup.MusicGroup;
 import com.github.fesswood.yandextestapp.presentation.common.BaseFragment;
 import com.github.fesswood.yandextestapp.presentation.common.BasePresenter;
 import com.github.fesswood.yandextestapp.presentation.common.Layout;
 import com.github.fesswood.yandextestapp.presentation.inject.MainActivityComponent;
 import com.github.fesswood.yandextestapp.presentation.main.MainActivity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,11 +28,11 @@ import javax.inject.Inject;
  * create an instance of this fragment.
  */
 @Layout(id = R.layout.fragment_group_list)
-public class GroupListFragment extends BaseFragment {
+public class GroupListFragment extends BaseFragment implements GroupListView{
 
 
     @Inject
-    protected GroupListPresenter mMainPresenter;
+    protected GroupListPresenter mGroupListPresenter;
 
     public static GroupListFragment newInstance() {
         return new GroupListFragment();
@@ -71,4 +76,15 @@ public class GroupListFragment extends BaseFragment {
     protected MainActivityComponent getMainActivityComponent() {
         return ((MainActivity) getActivity()).getMainActivityComponent();
     }
+
+    @Override
+    public void fillAdapter(List<MusicGroup> musicGroups) {
+
+    }
+
+    @Override
+    public void showError(@StringRes int message) {
+        Snackbar.make(getView(),message, Snackbar.LENGTH_INDEFINITE).show();
+    }
+
 }

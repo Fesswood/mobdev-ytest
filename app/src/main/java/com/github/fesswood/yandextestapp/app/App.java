@@ -3,8 +3,12 @@ package com.github.fesswood.yandextestapp.app;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.rx.RealmObservableFactory;
 
 /**
  * В App будем инициализировать базу данных Realm и делать миграции
@@ -17,12 +21,14 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         initRealm();
+        Fresco.initialize(this);
     }
 
     private void initRealm() {
         Log.d(TAG, "initRealm() starts");
         RealmConfiguration.Builder builder = new RealmConfiguration.Builder(getApplicationContext());
         builder.deleteRealmIfMigrationNeeded();
+        builder.rxFactory(new RealmObservableFactory());
         RealmConfiguration defaultConfiguration = builder.build();
         Realm.setDefaultConfiguration(defaultConfiguration);
         Realm realm = null;
