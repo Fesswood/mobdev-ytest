@@ -29,7 +29,8 @@ import butterknife.Bind;
  * create an instance of this fragment.
  */
 @Layout(id = R.layout.fragment_group_list)
-public class GroupListFragment extends BaseFragment implements GroupListView{
+public class GroupListFragment extends BaseFragment implements GroupListView,
+        MusicGroupAdapter.OnMusicGroupClickListener {
 
 
     private static final String TAG = GroupListFragment.class.getCanonicalName();
@@ -69,7 +70,7 @@ public class GroupListFragment extends BaseFragment implements GroupListView{
 
     @Override
     protected void inject() {
-         getMainActivityComponent().inject(this);
+        getMainActivityComponent().inject(this);
     }
 
 
@@ -81,16 +82,22 @@ public class GroupListFragment extends BaseFragment implements GroupListView{
     public void fillAdapter(List<MusicGroupViewModel> musicGroups) {
         Log.d(TAG, "fillAdapter: check data:");
         for (MusicGroupViewModel group : musicGroups) {
-            Log.d(TAG, "fillAdapter: " +group);
+            Log.d(TAG, "fillAdapter: " + group);
         }
         mMusicGroupAdapter = new MusicGroupAdapter(musicGroups);
+        mMusicGroupAdapter.setOnMusicGroupClickListener(this);
         rvMusicGroups.setLayoutManager(new LinearLayoutManager(getContext()));
         rvMusicGroups.setAdapter(mMusicGroupAdapter);
     }
 
     @Override
     public void showError(@StringRes int message) {
-        Snackbar.make(getView(),message, Snackbar.LENGTH_INDEFINITE).show();
+        Snackbar.make(getView(), message, Snackbar.LENGTH_INDEFINITE).show();
     }
 
+    @Override
+    public void selectMusicGroup(MusicGroupViewModel viewModel) {
+        Log.d(TAG, "selectMusicGroup() called with: " + "viewModel = [" + viewModel + "]");
+            mGroupListPresenter.groupSelected(viewModel);
+    }
 }
