@@ -11,10 +11,11 @@ import com.github.fesswood.yandextestapp.presentation.inject.DaggerMainActivityC
 import com.github.fesswood.yandextestapp.presentation.inject.DataModule;
 import com.github.fesswood.yandextestapp.presentation.inject.DomainModule;
 import com.github.fesswood.yandextestapp.presentation.inject.MainActivityComponent;
+import com.github.fesswood.yandextestapp.presentation.main.common.MainActivityComponentProvider;
 import com.github.fesswood.yandextestapp.presentation.main.musicGroupList.GroupListFragment;
 
 @Layout(id = R.layout.activity_main)
-public class MainActivity extends BaseActivity implements MainRouter {
+public class MainActivity extends BaseActivity implements MainRouter, MainActivityComponentProvider {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private MainActivityComponent mMainActivityComponent;
@@ -35,11 +36,12 @@ public class MainActivity extends BaseActivity implements MainRouter {
 
     @Override
     public void openDetail(int id) {
-        Intent intent = new Intent(this, DetailActivity.class);
+        Intent intent = DetailActivity.startActivity(this, id);
         startActivity(intent);
     }
 
-    public MainActivityComponent getMainActivityComponent() {
+    @Override
+    public MainActivityComponent getComponent() {
         return mMainActivityComponent;
     }
 }

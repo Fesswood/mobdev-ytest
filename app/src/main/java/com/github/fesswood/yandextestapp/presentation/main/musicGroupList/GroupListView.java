@@ -9,6 +9,5 @@ import java.util.List;
  * Created by fesswood on 20.04.16.
  */
 public interface GroupListView extends BaseView {
-
      void fillAdapter(List<MusicGroupViewModel> musicGroups) ;
 }

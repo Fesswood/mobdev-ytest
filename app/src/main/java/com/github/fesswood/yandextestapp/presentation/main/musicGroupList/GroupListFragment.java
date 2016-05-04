@@ -1,6 +1,7 @@
 package com.github.fesswood.yandextestapp.presentation.main.musicGroupList;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -14,8 +15,12 @@ import com.github.fesswood.yandextestapp.R;
 import com.github.fesswood.yandextestapp.presentation.common.BaseFragment;
 import com.github.fesswood.yandextestapp.presentation.common.BasePresenter;
 import com.github.fesswood.yandextestapp.presentation.common.Layout;
+import com.github.fesswood.yandextestapp.presentation.common.SimpleDividerItemDecoration;
+import com.github.fesswood.yandextestapp.presentation.detail.DetailActivity;
+import com.github.fesswood.yandextestapp.presentation.inject.DetailActivityComponent;
 import com.github.fesswood.yandextestapp.presentation.inject.MainActivityComponent;
 import com.github.fesswood.yandextestapp.presentation.main.MainActivity;
+import com.github.fesswood.yandextestapp.presentation.main.common.MainActivityComponentProvider;
 
 import java.util.List;
 
@@ -70,13 +75,14 @@ public class GroupListFragment extends BaseFragment implements GroupListView,
 
     @Override
     protected void inject() {
-        getMainActivityComponent().inject(this);
+        getActivityComponent().inject(this);
+    }
+
+    public MainActivityComponent getActivityComponent() {
+        return ((MainActivity)getActivity()).getComponent();
     }
 
 
-    protected MainActivityComponent getMainActivityComponent() {
-        return ((MainActivity) getActivity()).getMainActivityComponent();
-    }
 
     @Override
     public void fillAdapter(List<MusicGroupViewModel> musicGroups) {
@@ -84,8 +90,9 @@ public class GroupListFragment extends BaseFragment implements GroupListView,
         for (MusicGroupViewModel group : musicGroups) {
             Log.d(TAG, "fillAdapter: " + group);
         }
-        mMusicGroupAdapter = new MusicGroupAdapter(musicGroups);
+        mMusicGroupAdapter = new MusicGroupAdapter(musicGroups, getContext());
         mMusicGroupAdapter.setOnMusicGroupClickListener(this);
+        rvMusicGroups.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         rvMusicGroups.setLayoutManager(new LinearLayoutManager(getContext()));
         rvMusicGroups.setAdapter(mMusicGroupAdapter);
     }

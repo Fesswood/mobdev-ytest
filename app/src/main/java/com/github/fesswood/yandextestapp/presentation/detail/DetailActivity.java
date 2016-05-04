@@ -1,53 +1,69 @@
 package com.github.fesswood.yandextestapp.presentation.detail;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.github.fesswood.yandextestapp.R;
+import com.github.fesswood.yandextestapp.presentation.common.BaseActivity;
+import com.github.fesswood.yandextestapp.presentation.common.Layout;
+import com.github.fesswood.yandextestapp.presentation.detail.DetailInfo.DetailInfoFragment;
+import com.github.fesswood.yandextestapp.presentation.detail.common.DetailActivityComponentProvider;
+import com.github.fesswood.yandextestapp.presentation.inject.DaggerDetailActivityComponent;
+import com.github.fesswood.yandextestapp.presentation.inject.DataModule;
+import com.github.fesswood.yandextestapp.presentation.inject.DetailActivityComponent;
+import com.github.fesswood.yandextestapp.presentation.inject.DomainModule;
 
-public class DetailActivity extends AppCompatActivity {
+import butterknife.Bind;
+
+@Layout(id = R.layout.activity_detail)
+public class DetailActivity extends BaseActivity implements DetailRouter,
+        DetailActivityComponentProvider {
+
+    private static final String ARG_GROUP_ID = "ARG_GROUP_ID";
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    private DetailActivityComponent mDetailActivityComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        int groupId = getIntent().getIntExtra(ARG_GROUP_ID,-1);
+        if(groupId == -1){
+            throw new IllegalArgumentException("you must set ARG_GROUP_ID to launch this activity.");
         }
-        return super.onOptionsItemSelected(item);
+        setSupportActionBar(toolbar);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, DetailInfoFragment.newInstance(groupId))
+                .commit();
+
+        mDetailActivityComponent =
+                DaggerDetailActivityComponent
+                        .builder()
+                        .dataModule(new DataModule(groupId))
+                        .domainModule(new DomainModule())
+                        .build();
+    }
+
+    public static Intent startActivity(Context context, int musicGroupId) {
+        Intent i = new Intent(context, DetailActivity.class);
+        i.putExtra(ARG_GROUP_ID, musicGroupId);
+        return i;
+    }
+
+    @Override
+    public void routeToMusicGroupWebPage(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    @Override
+    public DetailActivityComponent getComponent() {
+        return mDetailActivityComponent;
     }
 }

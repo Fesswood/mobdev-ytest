@@ -1,9 +1,4 @@
-package com.github.fesswood.yandextestapp.data.repository;
-
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.github.fesswood.yandextestapp.data.repository.common;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

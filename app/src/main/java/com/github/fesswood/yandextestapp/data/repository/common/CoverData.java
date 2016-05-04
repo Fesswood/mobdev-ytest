@@ -1,4 +1,4 @@
-package com.github.fesswood.yandextestapp.data.repository;
+package com.github.fesswood.yandextestapp.data.repository.common;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -16,7 +16,6 @@ import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
-import rx.functions.Action1;
 
 /**
  * Created by fesswood on 24.04.16.
@@ -26,22 +25,22 @@ public class MusicGroupInteractor extends Interactor<List<MusicGroup>> {
 
     private static final String TAG = MusicGroupInteractor.class.getSimpleName();
     private final RestApi mRestApi;
-    private final ClosableGroupDataRepository mGroupDataRepository;
+    private final ClosableGroupDataRepository mRepository;
 
     @Inject
     public MusicGroupInteractor(@Named(DomainModule.JOB) Scheduler jobScheduler,
                                 @Named(DomainModule.UI) Scheduler uiScheduler,
-                                ClosableGroupDataRepository repository) {
+                                @Named(DataModule.COMMON) ClosableGroupDataRepository repository) {
         super(jobScheduler, uiScheduler);
         mRestApi = new RestApiImpl();
-        mGroupDataRepository = repository;
+        mRepository = repository;
     }
 
     @Override
     public void executeRequest(Subscriber<List<MusicGroup>> subscriber) {
-        mGroupDataRepository.open();
+        mRepository.open();
         Log.d(TAG, "executeRequest: Is db has music groups?");
-        if (mGroupDataRepository.isEmpty()) {
+        if (mRepository.isEmpty()) {
             Log.d(TAG, "executeRequest: No. sends request...");
             super.executeRequest(new Subscriber<List<MusicGroup>>() {
                 @Override
@@ -57,13 +56,13 @@ public class MusicGroupInteractor extends Interactor<List<MusicGroup>> {
 
                 @Override
                 public void onNext(List<MusicGroup> musicGroupRest) {
-                    mGroupDataRepository.saveAllMusicGroup(musicGroupRest);
-                    execute(mGroupDataRepository.getAllMusicGroup(jobScheduler), subscriber);
+                    mRepository.saveAllMusicGroup(musicGroupRest);
+                    execute(mRepository.getAllMusicGroup(jobScheduler), subscriber);
                 }
             });
         } else {
             Log.d(TAG, "executeRequest: Yes. getting from db...");
-            mGroupDataRepository.getAllMusicGroup(jobScheduler).subscribe(subscriber);
+            mRepository.getAllMusicGroup(jobScheduler).subscribe(subscriber);
         }
     }
 
@@ -76,6 +75,6 @@ public class MusicGroupInteractor extends Interactor<List<MusicGroup>> {
     @Override
     public void unsubscribe() {
         super.unsubscribe();
-        mGroupDataRepository.close();
+        mRepository.close();
     }
 }

@@ -96,4 +96,6 @@
     <string name="network_error">Проблемы с сетью… Попробуйте позже!</string>
     <string name="hide">Закрыть</string>
     <string name="small_description">%1$s альбомов, %2$s треков</string>
+    <string name="albums_desc">%s альбомов</string>
+    <string name="tracks_desc">%s треков</string>
 </resources>
